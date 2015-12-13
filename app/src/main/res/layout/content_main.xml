@@ -113,8 +113,8 @@
 
         <Button
             style="@style/CustomButtonStyle"
-            android:onClick="handleNumberButtonPress"
-            android:text="." />
+            android:onClick="handleClearButtonPress"
+            android:text="C" />
 
         <Button
             style="@style/CustomButtonStyle"
@@ -123,8 +123,8 @@
 
         <Button
             style="@style/CustomButtonStyle"
-            android:onClick="handleEqualsButtonPress"
-            android:text="=" />
+            android:onClick="handleNumberButtonPress"
+            android:text="." />
 
         <Button
             style="@style/CustomButtonStyle"
@@ -139,7 +139,7 @@
         android:orientation="horizontal">
         <Button
             style="@style/CustomButtonStyle"
-            android:onClick="handleClearButtonPress"
-            android:text="Clear" />
+            android:onClick="handleEqualsButtonPress"
+            android:text="=" />
     </LinearLayout>
 </LinearLayout>

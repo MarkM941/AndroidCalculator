@@ -1,6 +1,8 @@
 package com.personal.mmillstein.androidcalculator;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -28,22 +30,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void handleClearButtonPress(View view) {
+        Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vb.vibrate(100);
         clearCalculator();
+
     }
 
     public void handleNumberButtonPress(View view) {
+        Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vb.vibrate(50);
         String calcString = calculatorUtils.addDigit(((Button) view).getText().toString());
         TextView calculatorTextView = (TextView) findViewById(R.id.text_calculator);
         calculatorTextView.setText(calcString);
     }
 
     public void handleOperationButtonPress(View view) {
+        Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vb.vibrate(50);
         String calcString = calculatorUtils.addOperation((CalculatorUtils.Operation.from(((Button) view).getText().toString())));
         TextView calculatorTextView = (TextView) findViewById(R.id.text_calculator);
         calculatorTextView.setText(calcString);
     }
 
     public void handleEqualsButtonPress(View view) {
+        Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vb.vibrate(50);
         String calcString = calculatorUtils.calculate();
         TextView calculatorTextView = (TextView) findViewById(R.id.text_calculator);
         calculatorTextView.setText(calcString);
