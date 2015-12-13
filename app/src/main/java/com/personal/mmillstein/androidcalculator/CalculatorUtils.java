@@ -66,7 +66,7 @@ public class CalculatorUtils {
 
     public String addDigit(final String digit) {
         if (hasError) {
-            return calculatorStr;
+            return ERROR_STRING;
         }
         Function<String, String> applyDigit = new Function<String, String>() {
             @Override
@@ -105,7 +105,7 @@ public class CalculatorUtils {
 
     public String addOperation(Operation op) {
         if (hasError) {
-            return calculatorStr;
+            return ERROR_STRING;
         }
         if (!firstNumberStr.isPresent()) {
             hasError = true;
@@ -113,6 +113,7 @@ public class CalculatorUtils {
         }
         if (operation.isPresent()) {
             calculate();
+            return addOperation(op);
         }
         operation = Optional.of(op);
         return calculatorStr += op.getSymbol();
