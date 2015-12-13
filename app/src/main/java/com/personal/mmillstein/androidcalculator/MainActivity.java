@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void handleClearButtonPress(View view) {
         Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        vb.vibrate(100);
+        vb.vibrate(50);
         clearCalculator();
 
     }
