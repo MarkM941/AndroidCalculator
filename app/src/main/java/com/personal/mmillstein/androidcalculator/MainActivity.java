@@ -10,17 +10,25 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
-
     private CalculatorUtils calculatorUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.calculatorUtils = new CalculatorUtils();
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        clearCalculator();
+    }
+
+    public void clearCalculator() {
+        this.calculatorUtils = new CalculatorUtils();
+        TextView calculatorTextView = (TextView) findViewById(R.id.text_calculator);
+        calculatorTextView.setText("0");
+    }
+
+    public void handleClearButtonPress(View view) {
+        clearCalculator();
     }
 
     public void handleNumberButtonPress(View view) {
