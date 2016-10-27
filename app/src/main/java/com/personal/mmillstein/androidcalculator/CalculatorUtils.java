@@ -1,24 +1,21 @@
 package com.personal.mmillstein.androidcalculator;
 
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
 
 public class CalculatorUtils {
     private static final String ERROR_STRING = "Err!";
 
 
-    private Optional<String> firstNumberStr;
-    private Optional<String> secondNumberStr;
-    private String calculatorStr;
+    private Optional<Float> firstNumber;
+    private Optional<Float> secondNumber;
 
     private boolean hasError;
 
     private Optional<Operation> operation;
 
     public CalculatorUtils() {
-        this.calculatorStr = "";
-        this.firstNumberStr = Optional.absent();
-        this.secondNumberStr = Optional.absent();
+        this.firstNumber = Optional.absent();
+        this.secondNumber = Optional.absent();
         this.operation = Optional.absent();
     }
 
@@ -43,16 +40,16 @@ public class CalculatorUtils {
             throw new EnumConstantNotPresentException(Operation.class, str);
         }
 
-        public String apply(float num1, float num2) {
+        public Float apply(float num1, float num2) {
             switch (this) {
                 case ADDITION:
-                    return String.valueOf(num1 + num2);
+                    return num1 + num2;
                 case SUBTRACTION:
-                    return String.valueOf(num1 - num2);
+                    return num1 - num2;
                 case MULTIPLICATION:
-                    return String.valueOf(num1 * num2);
+                    return num1 * num2;
                 case DIVISION:
-                    return String.valueOf(num1 / num2);
+                    return num1 / num2;
                 default:
                     throw new UnsupportedOperationException();
             }
@@ -68,46 +65,22 @@ public class CalculatorUtils {
         if (hasError) {
             return ERROR_STRING;
         }
-        Function<String, String> applyDigit = new Function<String, String>() {
-            @Override
-            public String apply(String input) {
-                input += digit;
-                try {
-                    Float.valueOf(input);
-                    calculatorStr += digit;
-                    return input;
-                } catch (NumberFormatException e) {
-                    hasError = true;
-                    calculatorStr = ERROR_STRING;
-                    return "";
-                }
-            }
-        };
+
+        final Float newDigit = Float.valueOf(digit);
 
         if (!operation.isPresent()) {
-            if (firstNumberStr.isPresent()) {
-                firstNumberStr = firstNumberStr.transform(applyDigit);
-            } else {
-                firstNumberStr = Optional.of(digit);
-                calculatorStr += digit;
-            }
-            return calculatorStr;
+            firstNumber = Optional.of(newDigit + firstNumber.or(0f) * 10);
         } else {
-            if (secondNumberStr.isPresent()) {
-                secondNumberStr = secondNumberStr.transform(applyDigit);
-            } else {
-                secondNumberStr = Optional.of(digit);
-                calculatorStr += digit;
-            }
-            return calculatorStr;
+            secondNumber = Optional.of(newDigit + secondNumber.or(0f) * 10);
         }
+        return getCalculatorText();
     }
 
     public String addOperation(Operation op) {
         if (hasError) {
             return ERROR_STRING;
         }
-        if (!firstNumberStr.isPresent()) {
+        if (!firstNumber.isPresent()) {
             hasError = true;
             return ERROR_STRING;
         }
@@ -116,20 +89,39 @@ public class CalculatorUtils {
             return addOperation(op);
         }
         operation = Optional.of(op);
-        return calculatorStr += op.getSymbol();
+        return getCalculatorText();
     }
 
     public String calculate() {
-        if (!firstNumberStr.isPresent() || !secondNumberStr.isPresent()) {
+        if (!firstNumber.isPresent() || !secondNumber.isPresent()) {
             hasError = true;
             return ERROR_STRING;
         }
-        float num1 = Float.valueOf(firstNumberStr.get());
-        float num2 = Float.valueOf(secondNumberStr.get());
-        calculatorStr = operation.get().apply(num1, num2);
-        firstNumberStr = Optional.of(calculatorStr);
-        secondNumberStr = Optional.absent();
+
+        float num1 = firstNumber.get();
+        float num2 = secondNumber.get();
+        float result = operation.get().apply(num1, num2);
+        resetCalculatorToValue(result);
+        return getCalculatorText();
+    }
+
+    private void resetCalculatorToValue(float result) {
+        firstNumber = Optional.of(result);
+        secondNumber = Optional.absent();
         operation = Optional.absent();
-        return calculatorStr;
+    }
+
+    private String getCalculatorText() {
+        String result = "";
+        if (firstNumber.isPresent()) {
+            result += firstNumber.get();
+        }
+        if (operation.isPresent()) {
+            result += operation.get().getSymbol();
+        }
+        if (secondNumber.isPresent()) {
+            result += secondNumber.get();
+        }
+        return result;
     }
 }
